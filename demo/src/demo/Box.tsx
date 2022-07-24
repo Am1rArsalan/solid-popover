@@ -1,10 +1,7 @@
-import React from 'react';
-import styled from '@emotion/styled';
+import { Component } from "solid-js";
 
-const Container = styled.div``;
+//interface BoxProps extends ComponentPropsWithRef<"div"> {}
 
-interface BoxProps extends React.ComponentPropsWithRef<'div'> {}
-
-export const Box: React.FC<BoxProps> = React.forwardRef(({ ...props }, ref) => (
-  <Container ref={ref} {...props} />
-));
+export const Box: Component<{ ref: any }> = ({ ref, ...rest }) => (
+  <div ref={ref} {...rest} />
+);

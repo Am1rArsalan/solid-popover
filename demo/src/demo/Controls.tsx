@@ -1,171 +1,225 @@
-import styled from '@emotion/styled';
-import React, { Dispatch, FC, memo, useState } from 'react';
-import { PopoverPosition } from 'react-tiny-popover';
-import { ControlsField } from './ControlsField';
-import { ControlsState, Action } from './shared';
+//import React, { Dispatch, FC, useState } from "react";
+import { PopoverPosition } from "react-tiny-popover";
+import { Component, createSignal } from "solid-js";
+import { ControlsField } from "./ControlsField";
+import { ControlsState, Action } from "./shared";
 
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  width: 100%;
-`;
-
-const Input = styled.input`
-  width: 80px;
-`;
-
-const Button = styled.button`
-  width: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-interface Props {
+// TODO : fix any
+type Props = {
   className?: string;
   values: ControlsState;
-  dispatch: Dispatch<Action<keyof ControlsState>>;
+  dispatch: any;
   disabled?: boolean;
-}
+};
 
-const ALIGN = ['center', 'end', 'start'] as const;
-const POSITION = ['top', 'left', 'bottom', 'right'] as const;
+const ALIGN = ["center", "end", "start"] as const;
+const POSITION = ["top", "left", "bottom", "right"] as const;
 
-const getPositionArray = (startIndex: number): Exclude<PopoverPosition, 'custom'>[] => {
+const getPositionArray = (
+  startIndex: number
+): Exclude<PopoverPosition, "custom">[] => {
   const first = POSITION.slice(startIndex);
   const second = POSITION.slice(0, startIndex);
   return [...first, ...second];
 };
 
-export const Controls: FC<Props> = memo(({ values, dispatch, className, disabled }) => {
-  const [alignIndex, setAlignIndex] = useState(0);
-  const [positionIndex, setPositionIndex] = useState(0);
+export const Controls: Component<Props> = ({
+  values,
+  dispatch,
+  className,
+  disabled,
+}) => {
+  const [alignIndex, setAlignIndex] = createSignal(0);
+  const [positionIndex, setPositionIndex] = createSignal(0);
   return (
-    <Container
-      className={className}
-      style={{ pointerEvents: disabled ? 'none' : 'inherit', opacity: disabled ? 0.5 : 1 }}
+    <div
+      class={className}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        flexWrap: "wrap",
+        justifyContent: "flex-start",
+        width: "100%",
+        pointerEvents: disabled ? "none" : "inherit",
+        opacity: disabled ? 0.5 : 1,
+      }}
     >
-      <ControlsField label={'Padding'}>
-        <Input
+      <ControlsField label={"Padding"}>
+        <input
           value={values.padding}
-          onChange={(e) => dispatch({ type: 'padding', payload: Number(e.target.value) })}
+          onChange={(e) =>
+            dispatch({ type: "padding", payload: Number(e.target.value) })
+          }
+          style={{
+            width: "80px",
+          }}
         />
       </ControlsField>
-      <ControlsField label={'Align'}>
-        <Button
+      <ControlsField label={"Align"}>
+        <button
           onClick={() => {
             const nextIndex = (alignIndex + 1) % ALIGN.length;
-            dispatch({ type: 'align', payload: ALIGN[nextIndex] });
+            dispatch({ type: "align", payload: ALIGN[nextIndex] });
             setAlignIndex(nextIndex);
+          }}
+          style={{
+            width: " 50px",
+            display: " flex",
+            alignItems: " center",
+            justifyContent: " center",
           }}
         >
           {ALIGN[alignIndex]}
-        </Button>
+        </button>
       </ControlsField>
-      <ControlsField label={'Positions'}>
-        <Button
+      <ControlsField label={"Positions"}>
+        <button
           onClick={() => {
             const nextIndex = (positionIndex + 1) % POSITION.length;
-            dispatch({ type: 'positions', payload: getPositionArray(nextIndex) });
+            dispatch({
+              type: "positions",
+              payload: getPositionArray(nextIndex),
+            });
             setPositionIndex(nextIndex);
+          }}
+          style={{
+            width: " 50px",
+            display: " flex",
+            alignItems: " center",
+            justifyContent: " center",
           }}
         >
           {POSITION[positionIndex]}
-        </Button>
+        </button>
       </ControlsField>
-      <ControlsField label={'Boundary inset'}>
-        <Input
+      <ControlsField label={"Boundary inset"}>
+        <input
+          style={{
+            width: "80px",
+          }}
           value={values.boundaryInset}
-          onChange={(e) => dispatch({ type: 'boundaryInset', payload: Number(e.target.value) })}
+          onChange={(e) =>
+            dispatch({
+              type: "boundaryInset",
+              payload: Number(e.target.value),
+            })
+          }
         />
       </ControlsField>
-      <ControlsField label={'Arrow size'}>
-        <Input
+      <ControlsField label={"Arrow size"}>
+        <input
+          style={{
+            width: "80px",
+          }}
           value={values.arrowSize}
-          onChange={(e) => dispatch({ type: 'arrowSize', payload: Number(e.target.value) })}
+          onChange={(e) =>
+            dispatch({ type: "arrowSize", payload: Number(e.target.value) })
+          }
         />
       </ControlsField>
-      <ControlsField label={'Popover min-width'}>
-        <Input
+      <ControlsField label={"Popover min-width"}>
+        <input
+          style={{
+            width: "80px",
+          }}
           value={values.popoverSize.width}
           onChange={(e) =>
             dispatch({
-              type: 'popoverSize',
-              payload: { ...values.popoverSize, width: Number(e.target.value) },
+              type: "popoverSize",
+              payload: {
+                ...values.popoverSize,
+                width: Number(e.target.value),
+              },
             })
           }
         />
       </ControlsField>
-      <ControlsField label={'Popover min-height'}>
-        <Input
+      <ControlsField label={"Popover min-height"}>
+        <input
+          style={{
+            width: "80px",
+          }}
           value={values.popoverSize.height}
           onChange={(e) =>
             dispatch({
-              type: 'popoverSize',
-              payload: { ...values.popoverSize, height: Number(e.target.value) },
+              type: "popoverSize",
+              payload: {
+                ...values.popoverSize,
+                height: Number(e.target.value),
+              },
             })
           }
         />
       </ControlsField>
-      <ControlsField label={'Repositioning enabled'}>
+      <ControlsField label={"Repositioning enabled"}>
         <input
-          type='checkbox'
+          style={{ width: "80%" }}
+          type="checkbox"
           checked={values.reposition ? true : false}
           onChange={() => {
             dispatch({
-              type: 'reposition',
+              type: "reposition",
               payload: values.reposition ? false : true,
             });
           }}
         />
       </ControlsField>
-      <ControlsField label={'Fixed content location'}>
+      <ControlsField label={"Fixed content location"}>
         <input
-          type='checkbox'
+          type="checkbox"
           checked={values.contentLocationEnabled ? true : false}
           onChange={() => {
             dispatch({
-              type: 'contentLocationEnabled',
+              type: "contentLocationEnabled",
               payload: values.contentLocationEnabled ? false : true,
             });
           }}
         />
       </ControlsField>
-      <ControlsField label={'Fixed content location top'}>
-        <Input
+      <ControlsField label={"Fixed content location top"}>
+        <input
+          style={{
+            width: "80px",
+          }}
           value={values.contentLocation.top}
           onChange={(e) =>
             dispatch({
-              type: 'contentLocation',
-              payload: { ...values.contentLocation, top: Number(e.target.value) },
+              type: "contentLocation",
+              payload: {
+                ...values.contentLocation,
+                top: Number(e.target.value),
+              },
             })
           }
         />
       </ControlsField>
-      <ControlsField label={'Fixed content location left'}>
-        <Input
+      <ControlsField label={"Fixed content location left"}>
+        <input
+          style={{ width: "80px" }}
           value={values.contentLocation.left}
           onChange={(e) =>
             dispatch({
-              type: 'contentLocation',
-              payload: { ...values.contentLocation, left: Number(e.target.value) },
+              type: "contentLocation",
+              payload: {
+                ...values.contentLocation,
+                left: Number(e.target.value),
+              },
             })
           }
         />
       </ControlsField>
-      <ControlsField label={'Container class name'}>
-        <Input
-          value={values.containerClassName ?? ''}
+      <ControlsField label={"Container class name"}>
+        <input
+          style={{ width: "80px" }}
+          value={values.containerClassName ?? ""}
           onChange={(e) =>
             dispatch({
-              type: 'containerClassName',
+              type: "containerClassName",
               payload: e.target.value,
             })
           }
         />
       </ControlsField>
-    </Container>
+    </div>
   );
-});
+};

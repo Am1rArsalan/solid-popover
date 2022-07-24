@@ -1,25 +1,13 @@
-import styled from '@emotion/styled';
-import React, { CSSProperties, FC } from 'react';
-import { PopoverState } from 'react-tiny-popover';
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const Row = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-basis: 100%;
-`;
+import styled from "@emotion/styled";
+import { PopoverState } from "solid-tiny-popover";
+import { Component, JSX } from "solid-js";
 
 type Props = PopoverState & {
-  style?: CSSProperties;
+  style?: JSX.CSSProperties;
   className?: string;
 };
 
-export const PopoverContent: FC<Props> = ({
+export const PopoverContent: Component<Props> = ({
   className,
   style,
   position,
@@ -28,11 +16,59 @@ export const PopoverContent: FC<Props> = ({
   nudgedTop,
   nudgedLeft,
 }) => (
-  <Container className={className} style={style}>
-    <Row>position: {position}</Row>
-    <Row>nudgedLeft: {Math.floor(nudgedLeft)}</Row>
-    <Row>nudgedTop: {Math.floor(nudgedTop)}</Row>
-    <Row>padding: {Math.floor(padding)}</Row>
-    <Row>align: {align}</Row>
-  </Container>
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      gap: "8px",
+      ...style,
+    }}
+    class={className}
+  >
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        flexBasis: "100%",
+      }}
+    >
+      position: {position}
+    </div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        flexBasis: "100%",
+      }}
+    >
+      nudgedLeft: {Math.floor(nudgedLeft)}
+    </div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        flexBasis: "100%",
+      }}
+    >
+      nudgedTop: {Math.floor(nudgedTop)}
+    </div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        flexBasis: "100%",
+      }}
+    >
+      padding: {Math.floor(padding)}
+    </div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        flexBasis: "100%",
+      }}
+    >
+      align: {align}
+    </div>
+  </div>
 );

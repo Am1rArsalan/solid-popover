@@ -1,29 +1,35 @@
-import styled from '@emotion/styled';
-import React, { FC, memo } from 'react';
-
-const Container = styled.label`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 4px;
-  color: white;
-`;
-
-const Label = styled.div`
-  margin-bottom: 4px;
-  font-size: 12px;
-  user-select: none;
-`;
+import { Component, ParentProps } from "solid-js";
 
 interface Props {
   label: string;
   className?: string;
 }
 
-export const ControlsField: FC<Props> = memo(({ label, children, className }) => (
-  <Container className={className}>
-    <Label>{label}</Label>
+export const ControlsField: Component<ParentProps<Props>> = ({
+  label,
+  children,
+  className,
+}) => (
+  <div
+    style={{
+      display: " flex",
+      "flex-direction": "column",
+      "align-items": "flex-start",
+      "justify-content": "center",
+      padding: " 4px",
+      color: " white",
+    }}
+    class={className}
+  >
+    <div
+      style={{
+        marginBottom: "4px",
+        fontSize: "12px",
+        userSelect: "none",
+      }}
+    >
+      {label}
+    </div>
     {children}
-  </Container>
-));
+  </div>
+);

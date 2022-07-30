@@ -2,7 +2,7 @@
 import { Box } from "./Box";
 import { useBoxBehavior } from "./useBoxPositioning";
 import { Controls } from "./Controls";
-import { reducer } from "./shared";
+import { ControlsState, reducer } from "./shared";
 import { PopoverContent } from "./PopoverContent";
 import { Component, createSignal, on } from "solid-js";
 import { createStore } from "solid-js/store";
@@ -32,23 +32,59 @@ type Props = {
 };
 
 export const Demo: Component<Props> = ({ className }) => {
-  const [state, setState] = createStore({ isOpen: false });
+  const [state, setState] = createStore<ControlsState>({
+    padding: 10,
+    align: "center",
+    positions: ["top", "left", "bottom", "right"],
+    boundaryInset: 0,
+    reposition: true,
+    contentLocation: {
+      left: 20,
+      top: 20,
+    },
+    containerClassName: "solid-tiny-popover-container",
+    boundaryTolerance: 0,
+    arrowSize: 0,
+    popoverSize: {
+      width: 100,
+      height: 100,
+    },
+  });
+
+  const [isOpen, setIsOpen] = createSignal(false);
+  let parentRef;
+  let elementRef;
 
   return (
     <div>
-      <h1> popover demo is here </h1>
-      <Popover isOpen={state.isOpen} content={<div> content is here baby</div>}>
-        <button
-          onClick={() =>
-            setState({
-              ...state,
-              isOpen: !state.isOpen,
-            })
+      <div ref={parentRef}>
+        <Popover
+          ref={elementRef}
+          positions={state.positions}
+          parentElement={parentRef}
+          isOpen={isOpen()}
+          padding={state.padding}
+          align={state.align}
+          contentLocation={
+            state.contentLocationEnabled ? state.contentLocation : undefined
+          }
+          reposition={state.reposition}
+          //containerStyle={containerStyle}
+          //boundaryInset={state.boundaryInset}
+          //boundaryTolerance={state.boundaryTolerance}
+          containerClassName={state.containerClassName}
+          onClickOutside={() => setIsOpen(false)}
+          content={
+            <div
+              style={{ width: "10rem", height: "10rem", background: "#eee" }}
+            >
+              <h1> content is here baby</h1>
+            </div>
           }
         >
-          click me
-        </button>
-      </Popover>
+          <button onClick={() => setIsOpen(!isOpen())}>click me</button>
+        </Popover>
+      </div>
     </div>
   );
   //const boxContainerRef = <HTMLDivElement | undefined>();
@@ -61,24 +97,6 @@ export const Demo: Component<Props> = ({ className }) => {
   //handleOnMouseUp,
   //isDragging,
   //} = useBoxBehavior(boxContainerRef);
-  //const [state, dispatch] = useReducer(reducer, {
-  //padding: 10,
-  //align: "center",
-  //positions: ["top", "left", "bottom", "right"],
-  //boundaryInset: 0,
-  //reposition: true,
-  //contentLocation: {
-  //left: 20,
-  //top: 20,
-  //},
-  //containerClassName: "react-tiny-popover-container",
-  //boundaryTolerance: 0,
-  //arrowSize: 0,
-  //popoverSize: {
-  //width: 100,
-  //height: 100,
-  //},
-  //});
   //const containerStyle = useMemo(
   //() =>
   //({
@@ -86,6 +104,9 @@ export const Demo: Component<Props> = ({ className }) => {
   //} as Partial<CSSStyleDeclaration>),
   //[]
   //);
+};
+
+function fake() {
   //return (
   //<div
   //style={{
@@ -165,4 +186,4 @@ export const Demo: Component<Props> = ({ className }) => {
   ///>
   //</div>
   //);
-};
+}

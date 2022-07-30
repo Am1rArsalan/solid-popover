@@ -1,10 +1,12 @@
 //import { Component } from "solid-js";
+import { createEffect } from "solid-js";
 import { CreatePopover } from "./types";
 import { createContainer } from "./utils";
 
 export function createPopover({
   containerClassName,
   onPositionPopover,
+  childRef,
 }: CreatePopover) {
   const popoverRef = createContainer(
     {
@@ -27,9 +29,23 @@ export function createPopover({
     "solid-tiny-popover-scout"
   );
 
+  const positionPopover = ({
+    positionIndex = 0,
+    parentRect = parentElement.getBoundingClientRect(),
+    childRect = childRef?.current?.getBoundingClientRect(),
+    scoutRect = scoutRef?.current?.getBoundingClientRect(),
+    popoverRect = popoverRef.current.getBoundingClientRect(),
+    boundaryRect = boundaryElement === parentElement
+      ? parentRect
+      : boundaryElement.getBoundingClientRect(),
+  } = {}) => {
+    console.log("******in position popover");
+  };
+
   return {
     popoverRef,
     scoutRef,
+    positionPopover,
   };
 }
 

@@ -1,19 +1,16 @@
 import {
   Component,
-  JSX,
   onCleanup,
   onMount,
   ParentProps,
   Show,
   children,
   createEffect,
-  createSignal,
 } from "solid-js";
 import { createStore } from "solid-js/store";
 import {
   ContentLocation,
   ContentLocationGetter,
-  ContentRenderer,
   PopoverPosition,
   PopoverState,
 } from "./types";
@@ -22,7 +19,6 @@ import PopoverPortal from "./PopoverPortal";
 import { PopoverProps } from "./types/";
 import { Constants } from "./constants";
 import { createPopover } from "./createPopover";
-import { spread } from "solid-js/web";
 
 export const Popover: Component<ParentProps<PopoverProps>> = (props) => {
   const {
@@ -33,6 +29,7 @@ export const Popover: Component<ParentProps<PopoverProps>> = (props) => {
     padding,
     boundaryInset,
     parentElement,
+    boundaryElement = parentElement,
   } = props;
   let childRef: HTMLElement;
   const [popoverState, setPopoverState] = createStore<PopoverState>({
@@ -56,22 +53,21 @@ export const Popover: Component<ParentProps<PopoverProps>> = (props) => {
   let prevContentLocation: ContentLocation | ContentLocationGetter | undefined;
   let prevReposition = props.reposition;
 
-  // rename this to another thing i don't like this name
   const onPositionPopover = (popoverState: PopoverState) =>
     setPopoverState(popoverState);
 
   const { popoverRef, scoutRef, positionPopover } = createPopover({
     isOpen: props.isOpen,
+    parentElement,
     childRef,
     containerClassName,
-    parentElement,
-    //boundaryElement,
-    //contentLocation,
+    boundaryElement,
+    contentLocation: props.contentLocation,
     positions,
     align,
     padding,
     boundaryInset,
-    //reposition,
+    reposition: props.reposition,
     onPositionPopover,
   });
 
@@ -97,11 +93,14 @@ export const Popover: Component<ParentProps<PopoverProps>> = (props) => {
     window.removeEventListener("resize", handleWindowResize);
   });
 
-  const [shouldUpdate, setShouldUpdate] = createSignal(true);
+  //const [shouldUpdate, setShouldUpdate] = createSignal(true);
+  let shouldUpdate = true;
 
   createEffect(() => {
+    console.log("call updatePopover", props.isOpen);
     const updatePopover = () => {
-      if (props.isOpen && shouldUpdate()) {
+      console.log("in updatePopover", props.isOpen, shouldUpdate);
+      if (props.isOpen && shouldUpdate) {
         const childRect = childRef?.getBoundingClientRect();
         const popoverRect = popoverRef?.getBoundingClientRect();
         if (
@@ -137,7 +136,9 @@ export const Popover: Component<ParentProps<PopoverProps>> = (props) => {
           prevReposition = props.reposition;
         }
 
-        if (shouldUpdate()) {
+        if (shouldUpdate) {
+          // why we are not here ....
+          console.log("requestAnimationFrame");
           window.requestAnimationFrame(updatePopover);
         }
       }
@@ -148,7 +149,7 @@ export const Popover: Component<ParentProps<PopoverProps>> = (props) => {
   });
 
   onCleanup(() => {
-    setShouldUpdate(false);
+    shouldUpdate = false;
   });
 
   const renderChildren = () => {
@@ -172,12 +173,3 @@ export const Popover: Component<ParentProps<PopoverProps>> = (props) => {
     </>
   );
 };
-
-//<PopoverPortal
-//element={popoverRef.current}
-//scoutElement={scoutRef.current}
-//container={parentElement}
-//>
-//{typeof content === "function" ? content(popoverState) : content}
-//{children}
-//</PopoverPortal>

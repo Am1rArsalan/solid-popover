@@ -1,13 +1,13 @@
-import { Component, ParentProps, onMount, onCleanup } from "solid-js";
+import { ParentProps, onMount, onCleanup } from "solid-js";
 import { Portal } from "solid-js/web";
 
-const PopoverPortal: Component<
-  ParentProps<{
+function PopoverPortal(
+  props: ParentProps<{
     element: HTMLDivElement;
     container: HTMLElement;
     scoutElement: HTMLDivElement;
   }>
-> = (props) => {
+) {
   onMount(() => {
     props.container.appendChild(props.element);
     props.container.appendChild(props.scoutElement);
@@ -19,6 +19,6 @@ const PopoverPortal: Component<
   });
 
   return <Portal mount={props.element}>{props.children}</Portal>;
-};
+}
 
 export default PopoverPortal;

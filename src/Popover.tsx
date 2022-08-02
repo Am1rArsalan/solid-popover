@@ -1,5 +1,4 @@
 import {
-  Component,
   onCleanup,
   onMount,
   ParentProps,
@@ -20,8 +19,9 @@ import { PopoverProps } from "./types/";
 import { Constants } from "./constants";
 import { createPopover } from "./createPopover";
 
-export const Popover: Component<ParentProps<PopoverProps>> = (props) => {
-  const { containerClassName = "solid-tiny-popover", onClickOutside } = props;
+export function Popover(props: ParentProps<PopoverProps>) {
+  console.log("positions", props.positions);
+  const { containerClassName = "solid-tiny-popover" } = props;
   let childRef: HTMLElement;
   const [popoverState, setPopoverState] = createStore<PopoverState>({
     align: props.align,
@@ -47,8 +47,9 @@ export const Popover: Component<ParentProps<PopoverProps>> = (props) => {
   let prevContentLocation: ContentLocation | ContentLocationGetter | undefined;
   let prevReposition = props.reposition;
 
-  const onPositionPopover = (popoverState: PopoverState) =>
-    setPopoverState(popoverState);
+  function onPositionPopover(popoverState: PopoverState) {
+    return setPopoverState(popoverState);
+  }
 
   const { popoverRef, scoutRef, positionPopover } = createPopover({
     isOpen: props.isOpen,
@@ -67,31 +68,21 @@ export const Popover: Component<ParentProps<PopoverProps>> = (props) => {
     onPositionPopover,
   });
 
-  const handleOnClickOutside = (e: MouseEvent) => {
+  function handleOnClickOutside(e: MouseEvent) {
     if (props.isOpen && (e.target as Node).contains(popoverRef)) {
-      onClickOutside?.(e);
+      props.onClickOutside?.(e);
     }
-  };
+  }
 
-  const handleWindowResize = () => {
+  function handleWindowResize() {
     if (childRef) {
       window.requestAnimationFrame(() => positionPopover());
     }
-  };
-
-  onMount(() => {
-    window.addEventListener("click", handleOnClickOutside, true);
-    window.addEventListener("resize", handleWindowResize);
-  });
-
-  onCleanup(() => {
-    window.removeEventListener("click", handleOnClickOutside, true);
-    window.removeEventListener("resize", handleWindowResize);
-  });
+  }
 
   let shouldUpdate = true;
 
-  const updatePopover = () => {
+  function updatePopover() {
     console.log("in updatePopover", props.isOpen, shouldUpdate);
     const childRect = childRef?.getBoundingClientRect();
     const popoverRect = popoverRef?.getBoundingClientRect();
@@ -133,7 +124,13 @@ export const Popover: Component<ParentProps<PopoverProps>> = (props) => {
     //window.requestAnimationFrame(updatePopover);
     //prevIsOpen = props.isOpen;
     //}
-  };
+  }
+
+  function renderChildren() {
+    let c = children(() => props.children);
+    childRef = c() as HTMLElement;
+    return c();
+  }
 
   createRenderEffect(() => {
     console.log("call updatePopover");
@@ -143,16 +140,16 @@ export const Popover: Component<ParentProps<PopoverProps>> = (props) => {
     }
   });
 
-  onCleanup(() => {
-    console.log("In clean up");
-    shouldUpdate = false;
+  onMount(() => {
+    window.addEventListener("click", handleOnClickOutside, true);
+    window.addEventListener("resize", handleWindowResize);
   });
 
-  const renderChildren = () => {
-    let c = children(() => props.children);
-    childRef = c() as HTMLElement;
-    return c();
-  };
+  onCleanup(() => {
+    window.removeEventListener("click", handleOnClickOutside, true);
+    window.removeEventListener("resize", handleWindowResize);
+    shouldUpdate = false;
+  });
 
   return (
     <>
@@ -168,4 +165,4 @@ export const Popover: Component<ParentProps<PopoverProps>> = (props) => {
       </Show>
     </>
   );
-};
+}

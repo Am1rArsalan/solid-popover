@@ -1,12 +1,20 @@
-//import { Component } from "solid-js";
-import { createEffect } from "solid-js";
+import { Constants } from "./constants";
 import { CreatePopover } from "./types";
-import { createContainer } from "./utils";
+import { createContainer, getNewPopoverRect } from "./utils";
 
 export function createPopover({
   containerClassName,
   onPositionPopover,
   childRef,
+  parentElement,
+  boundaryElement,
+  isOpen,
+  boundaryInset,
+  padding,
+  contentLocation,
+  positions,
+  align,
+  reposition,
 }: CreatePopover) {
   const popoverRef = createContainer(
     {
@@ -29,18 +37,77 @@ export function createPopover({
     "solid-tiny-popover-scout"
   );
 
-  const positionPopover = ({
+  function positionPopover({
     positionIndex = 0,
-    parentRect = parentElement.getBoundingClientRect(),
-    childRect = childRef?.current?.getBoundingClientRect(),
-    scoutRect = scoutRef?.current?.getBoundingClientRect(),
-    popoverRect = popoverRef.current.getBoundingClientRect(),
+    parentRect = parentElement.getBoundingClientRect() as DOMRect,
+    childRect = childRef?.getBoundingClientRect(),
+    scoutRect = scoutRef?.getBoundingClientRect(),
+    popoverRect = popoverRef.getBoundingClientRect(),
     boundaryRect = boundaryElement === parentElement
       ? parentRect
       : boundaryElement.getBoundingClientRect(),
-  } = {}) => {
-    console.log("******in position popover");
-  };
+  } = {}) {
+    console.log("******in position popover*********", isOpen);
+    if (!childRect || !parentRect || !isOpen) {
+      return;
+    }
+
+    if (contentLocation) {
+      const { top: inputTop, left: inputLeft } =
+        typeof contentLocation === "function"
+          ? contentLocation({
+              childRect,
+              popoverRect,
+              parentRect,
+              boundaryRect,
+              padding,
+              nudgedTop: 0,
+              nudgedLeft: 0,
+              boundaryInset,
+              violations: Constants.EMPTY_CLIENT_RECT,
+              hasViolations: false,
+            })
+          : contentLocation;
+      const left = parentRect.left + inputLeft;
+      const top = parentRect.top + inputTop;
+
+      popoverRef.style.transform = `translate(${left - scoutRect.left}px, ${
+        top - scoutRect.top
+      }px)`;
+
+      onPositionPopover({
+        childRect,
+        popoverRect,
+        parentRect,
+        boundaryRect,
+        padding,
+        nudgedTop: 0,
+        nudgedLeft: 0,
+        boundaryInset,
+        violations: Constants.EMPTY_CLIENT_RECT,
+        hasViolations: false,
+      });
+
+      return;
+    }
+
+    const isExhausted = positionIndex === positions.length;
+    const position = isExhausted ? positions[0] : positions[positionIndex];
+
+    const { rect, boundaryViolation } = getNewPopoverRect(
+      {
+        childRect,
+        popoverRect,
+        boundaryRect,
+        position,
+        align,
+        padding,
+        reposition,
+      },
+      boundaryInset
+    );
+    // end of positionPopover
+  }
 
   return {
     popoverRef,
@@ -48,112 +115,6 @@ export function createPopover({
     positionPopover,
   };
 }
-
-//import { useCallback } from 'react';
-//import { BoundaryViolations, PositionPopover, UsePopoverProps, UsePopoverResult } from '.';
-//import { Constants, getNewPopoverRect, getNudgedPopoverRect } from './util';
-//import { useElementRef } from './useElementRef';
-
-//export const usePopover = ({
-//isOpen,
-//childRef,
-//positions,
-//containerClassName,
-//parentElement,
-//contentLocation,
-//align,
-//padding,
-//reposition,
-//boundaryInset,
-//boundaryElement,
-//onPositionPopover,
-//}: UsePopoverProps): UsePopoverResult => {
-//const popoverRef = useElementRef(containerClassName, {
-//position: 'fixed',
-//overflow: 'visible',
-//top: '0px',
-//left: '0px',
-//});
-
-//const scoutRef = useElementRef('react-tiny-popover-scout', {
-//position: 'fixed',
-//top: '0px',
-//left: '0px',
-//width: '0px',
-//height: '0px',
-//visibility: 'hidden',
-//});
-
-//const positionPopover = useCallback<PositionPopover>(
-//({
-//positionIndex = 0,
-//parentRect = parentElement.getBoundingClientRect(),
-//childRect = childRef?.current?.getBoundingClientRect(),
-//scoutRect = scoutRef?.current?.getBoundingClientRect(),
-//popoverRect = popoverRef.current.getBoundingClientRect(),
-//boundaryRect = boundaryElement === parentElement
-//? parentRect
-//: boundaryElement.getBoundingClientRect(),
-//} = {}) => {
-//if (!childRect || !parentRect || !isOpen) {
-//return;
-//}
-
-//if (contentLocation) {
-//const { top: inputTop, left: inputLeft } =
-//typeof contentLocation === 'function'
-//? contentLocation({
-//childRect,
-//popoverRect,
-//parentRect,
-//boundaryRect,
-//padding,
-//nudgedTop: 0,
-//nudgedLeft: 0,
-//boundaryInset,
-//violations: Constants.EMPTY_CLIENT_RECT,
-//hasViolations: false,
-//})
-//: contentLocation;
-
-//const left = parentRect.left + inputLeft;
-//const top = parentRect.top + inputTop;
-
-//popoverRef.current.style.transform = `translate(${left - scoutRect.left}px, ${
-//top - scoutRect.top
-//}px)`;
-
-//onPositionPopover({
-//childRect,
-//popoverRect,
-//parentRect,
-//boundaryRect,
-//padding,
-//nudgedTop: 0,
-//nudgedLeft: 0,
-//boundaryInset,
-//violations: Constants.EMPTY_CLIENT_RECT,
-//hasViolations: false,
-//});
-
-//return;
-//}
-
-//const isExhausted = positionIndex === positions.length;
-//const position = isExhausted ? positions[0] : positions[positionIndex];
-
-//const { rect, boundaryViolation } = getNewPopoverRect(
-//{
-//childRect,
-//popoverRect,
-//boundaryRect,
-//position,
-//align,
-//padding,
-//reposition,
-//},
-//boundaryInset,
-//);
 
 //if (boundaryViolation && reposition && !isExhausted) {
 //positionPopover({

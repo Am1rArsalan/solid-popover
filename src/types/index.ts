@@ -1,5 +1,4 @@
 import { JSX } from "solid-js/jsx-runtime";
-//import { Component, ParentProps } from "solid-js";
 
 export type ContentLocation = {
   top: number;
@@ -95,6 +94,16 @@ export interface PositionPopoverProps {
   parentRectAdjusted?: ClientRect;
   boundaryRect?: ClientRect;
 }
+
+export type GetNewPopoverRectProps = {
+  position: PopoverPosition;
+  reposition: boolean;
+  align: PopoverAlign;
+  childRect: ClientRect;
+  popoverRect: ClientRect;
+  boundaryRect: ClientRect;
+  padding: number;
+};
 
 export type PositionPopover = (props?: PositionPopoverProps) => void;
 

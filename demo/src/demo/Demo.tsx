@@ -42,6 +42,7 @@ export const Demo: Component<Props> = ({ className }) => {
       left: 20,
       top: 20,
     },
+    contentLocationEnabled: true,
     containerClassName: "solid-tiny-popover-container",
     boundaryTolerance: 0,
     arrowSize: 0,

@@ -52,7 +52,6 @@ export function Popover(props: ParentProps<PopoverProps>) {
   }
 
   const { popoverRef, scoutRef, positionPopover } = createPopover({
-    isOpen: props.isOpen,
     parentElement: props.parentElement,
     childRef,
     containerClassName,
@@ -76,14 +75,27 @@ export function Popover(props: ParentProps<PopoverProps>) {
 
   function handleWindowResize() {
     if (childRef) {
-      window.requestAnimationFrame(() => positionPopover());
+      const boundaryElement = props.boundaryElement
+        ? props.boundaryElement
+        : props.parentElement;
+      window.requestAnimationFrame(() =>
+        positionPopover({
+          contentLocation: props.contentLocation,
+          childRect: childRef?.getBoundingClientRect(),
+          parentRect: props.parentElement.getBoundingClientRect() as DOMRect,
+          isOpen: props.isOpen,
+          boundaryRect:
+            props.boundaryElement === props.parentElement
+              ? (props.parentElement.getBoundingClientRect() as DOMRect)
+              : (boundaryElement.getBoundingClientRect() as DOMRect),
+        })
+      );
     }
   }
 
   let shouldUpdate = true;
 
   function updatePopover() {
-    console.log("in updatePopover", props.isOpen, shouldUpdate);
     const childRect = childRef?.getBoundingClientRect();
     const popoverRect = popoverRef?.getBoundingClientRect();
     if (
@@ -105,7 +117,19 @@ export function Popover(props: ParentProps<PopoverProps>) {
         props.contentLocation !== prevContentLocation ||
         props.reposition !== prevReposition)
     ) {
-      positionPopover();
+      const boundaryElement = props.boundaryElement
+        ? props.boundaryElement
+        : props.parentElement;
+      positionPopover({
+        contentLocation: props.contentLocation,
+        childRect,
+        parentRect: props.parentElement.getBoundingClientRect() as DOMRect,
+        isOpen: props.isOpen,
+        boundaryRect:
+          props.boundaryElement === props.parentElement
+            ? (props.parentElement.getBoundingClientRect() as DOMRect)
+            : (boundaryElement.getBoundingClientRect() as DOMRect),
+      });
     }
 
     // TODO: factor prev checks out into the custom prev....s hook

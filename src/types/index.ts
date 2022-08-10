@@ -52,7 +52,6 @@ export type ArrowContainerProps = UseArrowContainerProps & {
 };
 
 export type CreatePopover = {
-  isOpen: boolean;
   childRef: HTMLElement | undefined;
   positions: PopoverPosition[];
   align: PopoverAlign;
@@ -85,15 +84,15 @@ export type PopoverProps = {
   padding?: number;
 };
 
-export interface PositionPopoverProps {
+export type PositionPopoverProps = {
+  isOpen: boolean;
   positionIndex?: number;
-  childRect?: ClientRect;
-  popoverRect?: ClientRect;
-  parentRect?: ClientRect;
-  scoutRect?: ClientRect;
-  parentRectAdjusted?: ClientRect;
-  boundaryRect?: ClientRect;
-}
+  childRect?: DOMRect;
+  parentRect?: DOMRect;
+  boundaryRect: DOMRect;
+  contentLocation?: ContentLocationGetter | ContentLocation;
+  //parentRectAdjusted?: DomRect;
+};
 
 export type GetNewPopoverRectProps = {
   position: PopoverPosition;

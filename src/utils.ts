@@ -24,8 +24,8 @@ export function rectsAreEqual(rectA: DOMRect, rectB: DOMRect) {
 
 export function popoverRectForPosition(
   position: PopoverPosition,
-  childRect: ClientRect,
-  popoverRect: ClientRect,
+  childRect: DOMRect,
+  popoverRect: DOMRect,
   padding: number,
   align: PopoverAlign
 ) {
@@ -122,3 +122,34 @@ export function getNewPopoverRect(
     boundaryViolation,
   } as const;
 }
+
+export const getNudgedPopoverRect = (
+  popoverRect: DOMRect,
+  boundaryRect: DOMRect,
+  boundaryInset: number
+) => {
+  const topBoundary = boundaryRect.top + boundaryInset;
+  const leftBoundary = boundaryRect.left + boundaryInset;
+  const rightBoundary = boundaryRect.right - boundaryInset;
+  const bottomBoundary = boundaryRect.bottom - boundaryInset;
+
+  let top = popoverRect.top < topBoundary ? topBoundary : popoverRect.top;
+  top =
+    top + popoverRect.height > bottomBoundary
+      ? bottomBoundary - popoverRect.height
+      : top;
+  let left = popoverRect.left < leftBoundary ? leftBoundary : popoverRect.left;
+  left =
+    left + popoverRect.width > rightBoundary
+      ? rightBoundary - popoverRect.width
+      : left;
+
+  return {
+    top,
+    left,
+    width: popoverRect.width,
+    height: popoverRect.height,
+    right: left + popoverRect.width,
+    bottom: top + popoverRect.height,
+  };
+};

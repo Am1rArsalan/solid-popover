@@ -1,6 +1,14 @@
 import { Constants } from "./constants";
-import { CreatePopover, PositionPopover, PositionPopoverProps } from "./types";
-import { createContainer, getNewPopoverRect } from "./utils";
+import {
+  BoundaryViolations,
+  CreatePopover,
+  PositionPopoverProps,
+} from "./types";
+import {
+  createContainer,
+  getNewPopoverRect,
+  getNudgedPopoverRect,
+} from "./utils";
 
 export function createPopover({
   containerClassName,
@@ -47,7 +55,6 @@ export function createPopover({
   }: PositionPopoverProps) {
     let scoutRect = scoutRef?.getBoundingClientRect();
     let popoverRect = popoverRef.getBoundingClientRect();
-    console.log("contentLocation", contentLocation);
     if (!childRect || !parentRect || !isOpen) {
       return;
     }
@@ -106,7 +113,76 @@ export function createPopover({
       },
       boundaryInset
     );
-    // end of positionPopover
+
+    if (boundaryViolation && reposition && !isExhausted) {
+      positionPopover({
+        positionIndex: positionIndex + 1,
+        childRect,
+        popoverRect,
+        parentRect,
+        boundaryRect,
+      });
+      return;
+    }
+
+    const { top, left, width, height } = rect;
+    const shouldNudge = reposition && !isExhausted;
+    const { left: nudgedLeft, top: nudgedTop } = getNudgedPopoverRect(
+      rect,
+      boundaryRect,
+      boundaryInset
+    );
+
+    let finalTop = top;
+    let finalLeft = left;
+
+    if (shouldNudge) {
+      finalTop = nudgedTop;
+      finalLeft = nudgedLeft;
+    }
+
+    popoverRef.style.transform = `translate(${finalLeft - scoutRect.left}px, ${
+      finalTop - scoutRect.top
+    }px)`;
+
+    const potentialViolations: BoundaryViolations = {
+      top: boundaryRect.top + boundaryInset - finalTop,
+      left: boundaryRect.left + boundaryInset - finalLeft,
+      right: finalLeft + width - boundaryRect.right + boundaryInset,
+      bottom: finalTop + height - boundaryRect.bottom + boundaryInset,
+    };
+
+    onPositionPopover({
+      childRect,
+      popoverRect: {
+        top: finalTop,
+        left: finalLeft,
+        width,
+        height,
+        right: finalLeft + width,
+        bottom: finalTop + height,
+      },
+      parentRect,
+      boundaryRect,
+      position,
+      align,
+      padding,
+      nudgedTop: nudgedTop - top,
+      nudgedLeft: nudgedLeft - left,
+      boundaryInset,
+      violations: {
+        top: potentialViolations.top <= 0 ? 0 : potentialViolations.top,
+        left: potentialViolations.left <= 0 ? 0 : potentialViolations.left,
+        right: potentialViolations.right <= 0 ? 0 : potentialViolations.right,
+        bottom:
+          potentialViolations.bottom <= 0 ? 0 : potentialViolations.bottom,
+      },
+      hasViolations:
+        potentialViolations.top > 0 ||
+        potentialViolations.left > 0 ||
+        potentialViolations.right > 0 ||
+        potentialViolations.bottom > 0,
+    });
   }
 
   return {

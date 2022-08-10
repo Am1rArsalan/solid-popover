@@ -1,7 +1,7 @@
 //import { MutableRefObject, createSignal } from "react";
 
 import { createSignal } from "solid-js";
-import { Mouse } from "solid-js/web";
+//import { Mouse } from "solid-js/web";
 
 type Position = {
   left: number;
@@ -18,43 +18,42 @@ type BoxInfo = {
   parentTop: number;
 };
 
-export const useBoxBehavior = (boxContainerRef: HTMLElement) => {
-  const [boxOffsetInfo, setBoxOffsetInfo] = createSignal<BoxInfo | null>(null);
+export const createBoxBehavior = (boxContainerRef: HTMLElement) => {
+  const [boxOffsetInfo, setBoxOffsetInfo] = createSignal<BoxInfo>();
   const [boxPosition, setBoxPosition] = createSignal<Position>({
     left: 200,
     top: 300,
   });
   const [isPopoverOpen, setIsPopoverOpen] = createSignal(true);
 
-  const handleOnMouseMove = ({ clientX, clientY }: React.MouseEvent) => {
-    if (!boxOffsetInfo) return;
+  // mouse event
+  const handleOnMouseMove = ({ clientX, clientY }: any) => {
+    const boxInfo = boxOffsetInfo();
 
-    const { parentLeft, parentTop, mouseLeft, mouseTop, width, height } =
-      boxOffsetInfo;
+    if (!boxInfo) return;
 
-    if (!boxOffsetInfo.isDragging) {
+    !boxInfo.isDragging &&
       setBoxOffsetInfo({
-        ...boxOffsetInfo,
+        ...boxInfo,
         isDragging: true,
       });
-    }
 
     setBoxPosition({
-      left: clientX - parentLeft - mouseLeft,
-      top: clientY - parentTop - mouseTop,
+      left: clientX - boxInfo.parentLeft - boxInfo.mouseLeft,
+      top: clientY - boxInfo.parentTop - boxInfo.mouseTop,
     });
   };
 
   const handleOnMouseUp = () => {
-    if (!boxOffsetInfo?.isDragging) setIsPopoverOpen(!isPopoverOpen);
-    setBoxOffsetInfo(null);
+    if (!boxOffsetInfo()?.isDragging) setIsPopoverOpen(!isPopoverOpen);
+    setBoxOffsetInfo(undefined);
   };
 
-  const handleBoxOnMouseDown = (e: React.MouseEvent) => {
+  const handleBoxOnMouseDown = (e: any) => {
     const { currentTarget, clientX, clientY } = e;
     const { left, top, width, height } = currentTarget.getBoundingClientRect();
     const { left: parentLeft, top: parentTop } =
-      boxContainerRef.current?.getBoundingClientRect() ?? {
+      boxContainerRef?.getBoundingClientRect() ?? {
         left: 0,
         top: 0,
       };
@@ -79,6 +78,6 @@ export const useBoxBehavior = (boxContainerRef: HTMLElement) => {
     handleOnMouseMove,
     handleOnMouseUp,
     handleBoxOnMouseDown,
-    isDragging: boxOffsetInfo?.isDragging ?? false,
+    isDragging: boxOffsetInfo()?.isDragging ?? false,
   };
 };

@@ -1,4 +1,4 @@
-- [Intro](#react-tiny-popover)
+- [Intro](#solid-tiny-popover)
 - [Installation](#install)
 - [Demo](#demo)
 - [Examples](#examples)
@@ -6,38 +6,38 @@
 - [Migrating from versions 3 and 4](#migrating-from-versions-3-and-4)
 - [API](#api)
 
-# react-tiny-popover
+# solid-tiny-popover
 
-A lightweight, highly customizable, non-intrusive, and Typescript friendly popover react HOC with no other dependencies!
+A lightweight, highly customizable, non-intrusive, and Typescript friendly popover solid HOC with no other dependencies!
 
 The component renders its child directly, without wrapping it with anything on the DOM, and in addition renders solely the JSX you provide when shown. It simply grabs the child component's coordinates and provides a robust and non-intrusive way for you to position your own content around the child. Your content will be appended to `document.body` (or an element of your choice) when shown, and removed when hidden. You can use it to generate little popups around input or button elements, menu fly-outs, or in pretty much any situation where you want some content to appear and disappear dynamically around a target. You can also specify your own location for your popover content or hook into the existing positioning process, allowing you to essentially make modal windows and the like, as well!
 
-`react-tiny-popover` can also guard against container boundaries and reposition itself to prevent any kind of hidden overflow. You can specify a priority of desired positions to fall back to, if you'd like.
+`solid-tiny-popover` can also guard against container boundaries and reposition itself to prevent any kind of hidden overflow. You can specify a priority of desired positions to fall back to, if you'd like.
 
 Optionally, you can provide a renderer function for your popover content that injects the popover's current position, in case your content needs to know where it sits in relation to its target.
 
-Since `react-tiny-popover` tries to be as non-invasive as possible, it will simply render the content you provide with the position and padding from the target that you provide. If you'd like an arrow pointing to the target to appear along with your content and don't feel like building it yourself, you may be interested in wrapping your content with the customizable `ArrowContainer` component, also provided! `ArrowContainer`'s arrow will follow its target dynamically, and handles boundary collisions as well.
+Since `solid-tiny-popover` tries to be as non-invasive as possible, it will simply render the content you provide with the position and padding from the target that you provide. If you'd like an arrow pointing to the target to appear along with your content and don't feel like building it yourself, you may be interested in wrapping your content with the customizable `ArrowContainer` component, also provided! `ArrowContainer`'s arrow will follow its target dynamically, and handles boundary collisions as well.
 
 ## Install
 
 ```shell
-yarn add react-tiny-popover
+yarn add solid-tiny-popover
 ```
 
 or
 
 ```shell
-npm install react-tiny-popover --save
+npm install solid-tiny-popover --save
 ```
 
-## [Demo](https://alexkatz.github.io/react-tiny-popover/)
+## [Demo](https://alexkatz.github.io/solid-tiny-popover/)
 
 :+1:
 
 ## Examples
 
 ```JSX
-import { Popover } from 'react-tiny-popover'
+import { Popover } from 'solid-tiny-popover'
 
 ...
 
@@ -53,7 +53,7 @@ import { Popover } from 'react-tiny-popover'
 ```
 
 ```JSX
-import { Popover } from 'react-tiny-popover'
+import { Popover } from 'solid-tiny-popover'
 
 ...
 
@@ -76,8 +76,8 @@ import { Popover } from 'react-tiny-popover'
 ```
 
 ```JSX
-import { useRef } from 'react';
-import { Popover, ArrowContainer } from 'react-tiny-popover'
+import { useRef } from 'solid';
+import { Popover, ArrowContainer } from 'solid-tiny-popover'
 
 const clickMeButtonRef = useRef<HTMLButtonElement | undefined>();
 
@@ -113,11 +113,11 @@ const clickMeButtonRef = useRef<HTMLButtonElement | undefined>();
 </Popover>;
 ```
 
-If you'd like to use a custom React element as `Popover`'s target, you'll have to pass the `ref` that `Popover` provides to an inner DOM element of your component. The best way to accomplish this is with [React's ref forwarding API](https://reactjs.org/docs/forwarding-refs.html). Here's a simple example, using Typescript:
+If you'd like to use a custom React element as `Popover`'s target, you'll have to pass the `ref` that `Popover` provides to an inner DOM element of your component. The best way to accomplish this is with [React's ref forwarding API](https://solidjs.org/docs/forwarding-refs.html). Here's a simple example, using Typescript:
 
 ```JSX
-import React, { useState } from 'react';
-import { Popover } from 'react-tiny-popover';
+import React, { useState } from 'solid';
+import { Popover } from 'solid-tiny-popover';
 
 interface CustomComponentProps extends React.ComponentPropsWithoutRef<'div'> {
   onClick(): void;
@@ -147,12 +147,12 @@ export default App;
 
 ## Hooks
 
-If you prefer going completely headless (though `react-tiny-popover` is fairly headless as is), you may prefer `usePopover` and `useArrowContainer` instead.
+If you prefer going completely headless (though `solid-tiny-popover` is fairly headless as is), you may prefer `usePopover` and `useArrowContainer` instead.
 
 To create your own custom arrow container, the `useArrowContainer` hook works as so:
 
 ```JSX
-import { useArrowContainer } from 'react-tiny-popover';
+import { useArrowContainer } from 'solid-tiny-popover';
 
 // ...
 
@@ -178,7 +178,7 @@ return (
 Similarly, `usePopover` allows you to create your own popover component as so:
 
 ```JSX
-import { usePopover } from 'react-tiny-popover'
+import { usePopover } from 'solid-tiny-popover'
 
 // ...
 
@@ -211,7 +211,7 @@ Admittedly, this is a bit more advanced, but play around and see what you can co
 
 ## Migrating from versions 3 and 4
 
-`react-tiny-popover` 5 and up has abandoned use of `findDOMNode` to gain a reference to `Popover`'s target DOM node, and now explicitly relies on a ref. Since React has deprecated `findDOMNode` in `StrictMode`, now seems like an appropriate time to shift away from this under-the-hood logic toward a clearer and more declarative API.
+`solid-tiny-popover` 5 and up has abandoned use of `findDOMNode` to gain a reference to `Popover`'s target DOM node, and now explicitly relies on a ref. Since React has deprecated `findDOMNode` in `StrictMode`, now seems like an appropriate time to shift away from this under-the-hood logic toward a clearer and more declarative API.
 
 If your code looked this way, it can stay this way. React elements handle refs out of the box with no issues:
 
@@ -250,7 +250,7 @@ const CustomComponent = React.forwardRef<HTMLDivElement, Props>((props, ref) => 
 ));
 ```
 
-Check out [React's ref forwarding API](https://reactjs.org/docs/forwarding-refs.html) for more info, and see the examples above.
+Check out [React's ref forwarding API](https://solidjs.org/docs/forwarding-refs.html) for more info, and see the examples above.
 
 ## API
 
@@ -258,7 +258,7 @@ Check out [React's ref forwarding API](https://reactjs.org/docs/forwarding-refs.
 
 | <b>Property<b>     | Type                             | Required | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ------------------ | -------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| children           | `JSX.Element` or `Function`      | ✔️       | If the `JSX.Element` you provide is a custom component, it should [forward refs](https://reactjs.org/docs/forwarding-refs.html). If you provide a function of form `(ref: React.Ref) => JSX.Element`, it'll return from it the JSX.Element target that you'd like the popover content to track. Don't forget to attach that `ref` to it, though.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| children           | `JSX.Element` or `Function`      | ✔️       | If the `JSX.Element` you provide is a custom component, it should [forward refs](https://solidjs.org/docs/forwarding-refs.html). If you provide a function of form `(ref: React.Ref) => JSX.Element`, it'll return from it the JSX.Element target that you'd like the popover content to track. Don't forget to attach that `ref` to it, though.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | isOpen             | `boolean`                        | ✔️       | When this boolean is set to true, the popover is visible and tracks the target. When the boolean is false, the popover content is neither visible nor present on the DOM.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | content            | `JSX.Element` or `Function`      | ✔️       | Here, you'll provide the content that will appear as the popover. Rather than a JSX element like a `<div>`, you may supply a function that returns a JSX.Element, which will look like this: `(popoverState: PopoverState) => JSX.Element`. Here, `position` is of type `'top', 'bottom', 'left', 'right'`. `align` is of type `start`, `center`, or `end`. Both `targetRect` and `popoverRect` are `ClientRect` objects of format `{ height: number, width: number, top: number, left: number, right: number, bottom: number }`, and represent the popover content and target `div`'s coordinates within your browser's window. `nudgedLeft` and `nudgedTop` specify the X and Y offset the popover content is shifted by to keep it within the window's bounds during a boundary collision. You may want to use these values to adjust your content depending on its location in relation to the window and the target, especially if you have repositioning disabled. Sweet. |
 | padding            | `number`                         |          | This number determines the gap, in pixels, between your target content and your popover content. Defaults to 6.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
@@ -266,7 +266,7 @@ Check out [React's ref forwarding API](https://reactjs.org/docs/forwarding-refs.
 | position           | `string[]`                       |          | You may provide a priority list of preferred positions for your popover content in relation to its target, in the form of an array. Valid values for the array are `'top', 'bottom', 'left', 'right'`. If the popover reaches the edge of the window or its otherwise specified boundary (see `parentElement` and `boundaryInset`), and repositioning is enabled, it will attempt to render in the order you specify. The default order is `['top', 'left', 'right', 'bottom']`. If you'd like, you can provide a shorter array like `['top', 'left']`. Once the array of positions is exhausted, the popover will no longer attempt to reposition.                                                                                                                                                                                                                                                                                                                             |
 | align              | `string`                         |          | Possible values are `start`, `center`, and `end`. If `start` is specified, the popover content's top or left location is aligned with its target's. With `end` specified, the content's bottom or right location is aligned with its target's. If `center` is specified, the popover content and target's centers are aligned. Defaults to `center`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | ref                | `React.Ref`                      |          | Since `Popover` relies on ref forwarding to access its child, it's not simple to obtain a second reference to that child. This property acts as a "pass through" for you to obtain a ref to the child you've provided `Popover`. The value of the ref you provide here will be `Popover`'s child.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| onClickOutside     | `Function`                       |          | If `react-tiny-popover` detects a click event outside of the target and outside of the popover, you may handle this event here, in the form of `(e: MouseEvent) => void`. Note that event handling uses capturing, so this will likely fire before any event handlers targeting the actual element that was clicked.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| onClickOutside     | `Function`                       |          | If `solid-tiny-popover` detects a click event outside of the target and outside of the popover, you may handle this event here, in the form of `(e: MouseEvent) => void`. Note that event handling uses capturing, so this will likely fire before any event handlers targeting the actual element that was clicked.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | contentLocation    | `object` or `Function`           |          | If you'd like to hook directly into the positioning process, you may do so here! You can provide an object of type `{ top: number, left: number }` to completely override the popover content's (`popoverRect`) location. You can also provide a function that looks like this: `(popoverState: PopoverState) => { top: number, left: number }` (The arguments to this function are the same as the content renderer function above).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | parentElement      | `HTMLElement`                    |          | Provide an HTML element here to have your popover content appended to it rather than `document.body`. This is useful if you'd like your popover to sit at a particular place within the DOM. Supplying a `parentElement` will not in most cases directly affect the positioning of the popover.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | boundaryInset      | `number`                         |          | This number specifies the inset around your `parentElement`'s border that boundary violations are determined at. Defaults to 0. Can be negative.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |

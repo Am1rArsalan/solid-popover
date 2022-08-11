@@ -1,5 +1,5 @@
 {
-  "name": "solid-tiny-popover",
+  "name": "solid-popover",
   "version": "0.0.1",
   "description": "Popover for solid-js",
   "info": "...",
@@ -51,4 +51,3 @@
     "access": "public"
   }
 }
-

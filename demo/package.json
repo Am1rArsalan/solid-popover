@@ -16,6 +16,6 @@
   },
   "dependencies": {
     "solid-js": "^1.4.7",
-    "solid-tiny-popover": "link:.."
+    "solid-popover": "link:.."
   }
 }

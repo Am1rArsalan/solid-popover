@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   solid-js: ^1.4.7
+  solid-popover: link:..
   solid-tiny-popover: link:..
   typescript: ^4.7.4
   vite: ^3.0.0
@@ -9,6 +10,7 @@ specifiers:
 
 dependencies:
   solid-js: 1.4.7
+  solid-popover: link:..
   solid-tiny-popover: link:..
 
 devDependencies:

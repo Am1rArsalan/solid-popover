@@ -37,9 +37,9 @@
     "solid-js": "^1.1.0"
   },
   "devDependencies": {
-    "@release-it/keep-a-changelog": "^2.3.0",
+    "@release-it/keep-a-changelog": "^3.1.0",
     "prettier": "^2.5.1",
-    "release-it": "^14.12.1",
+    "release-it": "^15.3.0",
     "rollup": "^2.64.0",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-windicss": "^1.6.3",

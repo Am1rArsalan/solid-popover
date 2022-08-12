@@ -11,11 +11,6 @@ export function PopoverContent(props: Props) {
   const [store] = useControls();
   console.log("In popoverContent", props, store);
 
-  createEffect(() => {
-    console.log("props", props);
-    console.log("props.className", props.className);
-  });
-
   return (
     <div
       style={{
@@ -65,7 +60,7 @@ export function PopoverContent(props: Props) {
           color: "#fff",
         }}
       >
-        padding: {Math.floor(props.padding)}
+        spacing: {Math.floor(props.spacing)}
       </div>
       <div
         style={{

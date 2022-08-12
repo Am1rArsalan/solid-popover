@@ -1,4 +1,4 @@
-import { PopoverPosition } from "solid-tiny-popover";
+import { PopoverPosition } from "solid-popover";
 import { createSignal } from "solid-js";
 import { useControls } from "../store/controlsStoreContext";
 import { ControlsField } from "./ControlsField";
@@ -24,7 +24,7 @@ export function Controls(props: Props) {
   const [
     store,
     {
-      updatePadding,
+      updateSpacing,
       updateAlignment,
       updatePositions,
       updateBoundaryInset,
@@ -35,6 +35,7 @@ export function Controls(props: Props) {
       updateContentLocationFromTop,
       updateContentLocationFromLeft,
       updateContainerClassName,
+      updateArrowSize,
     },
   ] = useControls();
   const [alignIndex, setAlignIndex] = createSignal(0);
@@ -52,10 +53,10 @@ export function Controls(props: Props) {
         opacity: disabled ? 0.5 : 1,
       }}
     >
-      <ControlsField label={"Padding"}>
+      <ControlsField label={"Spacing"}>
         <input
-          value={store.padding}
-          onChange={(e) => updatePadding(e.currentTarget.value)}
+          value={store.spacing}
+          onChange={(e) => updateSpacing(+e.currentTarget.value)}
           style={{ width: "80px" }}
         />
       </ControlsField>
@@ -95,40 +96,38 @@ export function Controls(props: Props) {
       </ControlsField>
       <ControlsField label={"Boundary inset"}>
         <input
-          style={{
-            width: "80px",
-          }}
+          style={{ width: "80px" }}
           value={store.boundaryInset}
           onChange={(e) => updateBoundaryInset(+e.currentTarget.value)}
         />
       </ControlsField>
       <ControlsField label={"Arrow size"}>
         <input
-          style={{
-            width: "80px",
-          }}
+          style={{ width: "80px" }}
           value={store.arrowSize}
-          onChange={(e) => updateBoundaryInset(+e.currentTarget.value)}
+          onChange={(e) => updateArrowSize(+e.currentTarget.value)}
         />
       </ControlsField>
-      <ControlsField label={"Popover min-width"}>
-        <input
-          style={{
-            width: "80px",
-          }}
-          value={store.popoverSize.width}
-          onChange={(e) => updatePopoverWidth(+e.currentTarget.value)}
-        />
-      </ControlsField>
-      <ControlsField label={"Popover min-height"}>
-        <input
-          style={{
-            width: "80px",
-          }}
-          value={store.popoverSize.height}
-          onChange={(e) => updatePopoverHeight(+e.currentTarget.value)}
-        />
-      </ControlsField>
+      {store.popoverSize && (
+        <ControlsField label={"Popover min-width"}>
+          <input
+            style={{ width: "80px" }}
+            value={store.popoverSize.width}
+            onChange={(e) => updatePopoverWidth(+e.currentTarget.value)}
+          />
+        </ControlsField>
+      )}
+      {store.popoverSize && (
+        <ControlsField label={"Popover min-height"}>
+          <input
+            style={{
+              width: "80px",
+            }}
+            value={store.popoverSize.height}
+            onChange={(e) => updatePopoverHeight(+e.currentTarget.value)}
+          />
+        </ControlsField>
+      )}
       <ControlsField label={"Repositioning enabled"}>
         <input
           style={{ width: "80%" }}
@@ -144,22 +143,28 @@ export function Controls(props: Props) {
           onChange={() => toggleContentLocationEnabled()}
         />
       </ControlsField>
-      <ControlsField label={"Fixed content location top"}>
-        <input
-          style={{ width: "80px" }}
-          value={store.contentLocation.top}
-          onChange={(e) =>
-            updateContentLocationFromLeft(+e.currentTarget.value)
-          }
-        />
-      </ControlsField>
-      <ControlsField label={"Fixed content location left"}>
-        <input
-          style={{ width: "80px" }}
-          value={store.contentLocation.left}
-          onChange={(e) => updateContentLocationFromTop(+e.currentTarget.value)}
-        />
-      </ControlsField>
+      {store.contentLocation && (
+        <ControlsField label={"Fixed content location top"}>
+          <input
+            style={{ width: "80px" }}
+            value={store.contentLocation.top}
+            onChange={(e) =>
+              updateContentLocationFromLeft(+e.currentTarget.value)
+            }
+          />
+        </ControlsField>
+      )}
+      {store.contentLocation && (
+        <ControlsField label={"Fixed content location left"}>
+          <input
+            style={{ width: "80px" }}
+            value={store.contentLocation.left}
+            onChange={(e) =>
+              updateContentLocationFromTop(+e.currentTarget.value)
+            }
+          />
+        </ControlsField>
+      )}
       <ControlsField label={"Container class name"}>
         <input
           style={{ width: "80px" }}

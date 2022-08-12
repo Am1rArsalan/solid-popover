@@ -8,7 +8,6 @@ body,
 
 #root {
   display: flex;
-  background-color: black;
 }
 
 #root * {
@@ -22,4 +21,30 @@ html {
 *:before,
 *:after {
   box-sizing: inherit;
+}
+
+.main {
+  display: flex;
+  position: relative;
+  background-color: black;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 128px;
+  height: 100%;
+}
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 800px;
+  border: 1px solid white;
+  background-color: #252525;
+  /*background-color: black;*/
+}
+
+.controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }

@@ -1,27 +1,17 @@
-import type { Component } from "solid-js";
-
 import styles from "./App.module.css";
 import { Demo } from "./components/Demo";
+import { ControlsProvider } from "./store/controlsStoreContext";
 
-const App: Component = () => {
+function App() {
   return (
     <div class={styles.App}>
-      <main
-        style={{
-          display: "flex",
-          position: "relative",
-          flex: "1",
-          backgroundColor: "black",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: " center",
-          padding: "128px",
-        }}
-      >
-        <Demo />
-      </main>
+      <ControlsProvider>
+        <main class="main">
+          <Demo />
+        </main>
+      </ControlsProvider>
     </div>
   );
-};
+}
 
 export default App;

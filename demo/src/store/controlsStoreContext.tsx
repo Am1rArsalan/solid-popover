@@ -4,8 +4,8 @@ import { createStore } from "solid-js/store";
 import { PopoverPosition } from "../../../dist/types/types";
 import { ControlsState } from "../components/shared";
 
-export interface Actions {
-  updatePadding(value: string): void;
+export interface ControlActions {
+  updateSpacing(value: number): void;
   updateAlignment(value: "center" | "end" | "start"): void;
   updatePositions(value: Exclude<PopoverPosition, "custom">[]): void;
   updateBoundaryInset(value: number): void;
@@ -17,14 +17,16 @@ export interface Actions {
   updateContentLocationFromTop(value: number): void;
   updateContainerClassName(value: string): void;
   updateArrowSize(value: number): void;
+  togglePopover(value?: boolean): void;
 }
 
-export type ControlStateContextType = [ControlsState, Actions];
+export type ControlStateContextType = [ControlsState, ControlActions];
 
 const initialState = {
-  padding: 10,
+  isOpen: false,
+  spacing: 10,
   align: "center",
-  positions: ["top", "left", "bottom", "right"],
+  positions: ["top", "left", "bottom", "right"] as PopoverPosition[],
   boundaryInset: 0,
   reposition: true,
   contentLocation: {
@@ -34,7 +36,7 @@ const initialState = {
   contentLocationEnabled: false,
   containerClassName: "solid-tiny-popover-container",
   boundaryTolerance: 0,
-  arrowSize: 0,
+  arrowSize: 10,
   popoverSize: {
     width: 100,
     height: 100,
@@ -49,9 +51,9 @@ const ControlsStateContext = createContext<ControlStateContextType>([
 export const ControlsProvider: Component<ParentProps> = (props) => {
   const [state, setState] = createStore<ControlsState>(initialState);
 
-  const actions: Actions = Object({
-    updatePadding(value: string) {
-      setState("padding", +value);
+  const actions: ControlActions = Object({
+    updateSpacing(value: string) {
+      setState("spacing", +value);
     },
     updateAlignment(value: "center" | "end" | "start") {
       setState("align", value);
@@ -101,7 +103,16 @@ export const ControlsProvider: Component<ParentProps> = (props) => {
     updateContainerClassName(value: string) {
       setState("containerClassName", value);
     },
+    togglePopover(value?: boolean) {
+      if (value !== undefined) {
+        setState("isOpen", value);
+        return;
+      }
+
+      setState("isOpen", !state.isOpen);
+    },
   });
+
   const store: ControlStateContextType = [state, actions];
 
   return (

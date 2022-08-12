@@ -19,7 +19,7 @@ export type PopoverState = {
   boundaryRect: ClientRect;
   position?: PopoverPosition;
   align?: PopoverAlign;
-  padding: number;
+  spacing: number;
   nudgedLeft: number;
   nudgedTop: number;
   boundaryInset: number;
@@ -46,23 +46,9 @@ export type UseArrowContainerProps = {
 export type ArrowContainerProps = UseArrowContainerProps & {
   children: JSX.Element;
   className?: string;
-  //style?: CSSProperties;
-  //arrowStyle?: CSSProperties;
+  style?: JSX.CSSProperties;
+  arrowStyle?: JSX.CSSProperties;
   arrowClassName?: string;
-};
-
-export type CreatePopover = {
-  childRef: HTMLElement | undefined;
-  positions: PopoverPosition[];
-  align: PopoverAlign;
-  padding: number;
-  reposition: boolean;
-  boundaryInset: number;
-  parentElement?: HTMLElement;
-  boundaryElement?: HTMLElement;
-  containerClassName?: string;
-  contentLocation?: ContentLocationGetter | ContentLocation;
-  onPositionPopover(popoverState: PopoverState): void;
 };
 
 export type PopoverProps = {
@@ -81,11 +67,10 @@ export type PopoverProps = {
   boundaryInset?: number;
   boundaryTolerance?: number;
   onClickOutside?: (e: MouseEvent) => void;
-  padding?: number;
+  spacing?: number;
 };
 
 export type PositionPopoverProps = {
-  isOpen: boolean;
   positionIndex?: number;
   childRect?: DOMRect;
   parentRect?: DOMRect;
@@ -101,7 +86,7 @@ export type GetNewPopoverRectProps = {
   childRect: ClientRect;
   popoverRect: ClientRect;
   boundaryRect: ClientRect;
-  padding: number;
+  spacing: number;
 };
 
 export type PositionPopover = (props?: PositionPopoverProps) => void;

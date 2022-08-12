@@ -26,7 +26,7 @@ export function popoverRectForPosition(
   position: PopoverPosition,
   childRect: DOMRect,
   popoverRect: DOMRect,
-  padding: number,
+  spacing: number,
   align: PopoverAlign
 ) {
   const targetMidX = childRect.left + childRect.width / 2;
@@ -38,7 +38,7 @@ export function popoverRectForPosition(
   switch (position) {
     case "left":
       top = targetMidY - height / 2;
-      left = childRect.left - padding - width;
+      left = childRect.left - spacing - width;
       if (align === "start") {
         top = childRect.top;
       }
@@ -47,7 +47,7 @@ export function popoverRectForPosition(
       }
       break;
     case "bottom":
-      top = childRect.bottom + padding;
+      top = childRect.bottom + spacing;
       left = targetMidX - width / 2;
       if (align === "start") {
         left = childRect.left;
@@ -58,7 +58,7 @@ export function popoverRectForPosition(
       break;
     case "right":
       top = targetMidY - height / 2;
-      left = childRect.right + padding;
+      left = childRect.right + spacing;
       if (align === "start") {
         top = childRect.top;
       }
@@ -67,7 +67,7 @@ export function popoverRectForPosition(
       }
       break;
     default:
-      top = childRect.top - height - padding;
+      top = childRect.top - height - spacing;
       left = targetMidX - width / 2;
       if (align === "start") {
         left = childRect.left;
@@ -95,7 +95,7 @@ export function getNewPopoverRect(
     childRect,
     popoverRect,
     boundaryRect,
-    padding,
+    spacing,
     reposition,
   }: GetNewPopoverRectProps,
   boundaryInset: number
@@ -104,7 +104,7 @@ export function getNewPopoverRect(
     position,
     childRect,
     popoverRect,
-    padding,
+    spacing,
     align
   );
 

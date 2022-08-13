@@ -1,6 +1,5 @@
 import { PopoverState } from "solid-popover";
-import { createEffect, JSX } from "solid-js";
-import { useControls } from "../store/controlsStoreContext";
+import { JSX } from "solid-js";
 
 type Props = PopoverState & {
   style?: JSX.CSSProperties;
@@ -8,9 +7,6 @@ type Props = PopoverState & {
 };
 
 export function PopoverContent(props: Props) {
-  const [store] = useControls();
-  console.log("In popoverContent", props, store);
-
   return (
     <div
       style={{

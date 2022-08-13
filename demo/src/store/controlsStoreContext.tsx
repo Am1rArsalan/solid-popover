@@ -1,7 +1,7 @@
-import { Component, createContext, useContext } from "solid-js";
+import { createContext, useContext } from "solid-js";
 import { ParentProps } from "solid-js";
 import { createStore } from "solid-js/store";
-import { PopoverPosition } from "../../../dist/types/types";
+import { PopoverPosition, PopoverAlign } from "../../../dist/types/types";
 import { ControlsState } from "../components/shared";
 
 export interface ControlActions {
@@ -25,7 +25,7 @@ export type ControlStateContextType = [ControlsState, ControlActions];
 const initialState = {
   isOpen: false,
   spacing: 10,
-  align: "center",
+  align: "center" as PopoverAlign,
   positions: ["top", "left", "bottom", "right"] as PopoverPosition[],
   boundaryInset: 0,
   reposition: true,
@@ -48,7 +48,7 @@ const ControlsStateContext = createContext<ControlStateContextType>([
   Object({}),
 ]);
 
-export const ControlsProvider: Component<ParentProps> = (props) => {
+export function ControlsProvider(props: ParentProps) {
   const [state, setState] = createStore<ControlsState>(initialState);
 
   const actions: ControlActions = Object({
@@ -108,11 +108,9 @@ export const ControlsProvider: Component<ParentProps> = (props) => {
         setState("isOpen", value);
         return;
       }
-
       setState("isOpen", !state.isOpen);
     },
   });
-
   const store: ControlStateContextType = [state, actions];
 
   return (
@@ -120,7 +118,7 @@ export const ControlsProvider: Component<ParentProps> = (props) => {
       {props.children}
     </ControlsStateContext.Provider>
   );
-};
+}
 
 export function useControls() {
   const store = useContext(ControlsStateContext);

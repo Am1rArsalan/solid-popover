@@ -26,7 +26,6 @@ import { PopoverProps } from "./types/";
 import { Constants } from "./constants";
 
 export function Popover(props: ParentProps<PopoverProps>) {
-  //console.log("props passed to Popover:\n", props);
   let childRef: HTMLElement;
   // previous popover state...
   let prevIsOpen = false;
@@ -82,7 +81,6 @@ export function Popover(props: ParentProps<PopoverProps>) {
       ? parentRect
       : props.boundaryElement.getBoundingClientRect(),
   }: PositionPopoverProps) {
-    console.log("in position popover");
     let scoutRect = scoutRef?.getBoundingClientRect();
     let popoverRect = popoverRef.getBoundingClientRect();
     if (!childRect || !parentRect || !props.isOpen) {
@@ -112,7 +110,6 @@ export function Popover(props: ParentProps<PopoverProps>) {
         top - scoutRect.top
       }px)`;
 
-      console.log("call setPopoverState #1");
       setPopoverState({
         childRect,
         popoverRect,
@@ -185,7 +182,6 @@ export function Popover(props: ParentProps<PopoverProps>) {
       bottom: finalTop + height - boundaryRect.bottom + props.boundaryInset,
     };
 
-    console.log("#2 setPopoverState");
     setPopoverState({
       childRect,
       popoverRect: {
@@ -292,13 +288,6 @@ export function Popover(props: ParentProps<PopoverProps>) {
     if (props.reposition !== prevReposition) {
       prevReposition = props.reposition;
     }
-
-    // I don't know what the fuck is going on here
-    //if (shouldUpdate) {
-    //window.requestAnimationFrame(updatePopover);
-    //prevIsOpen = props.isOpen;
-    //shouldUpdate = false;
-    //}
   }
 
   function renderChildren() {

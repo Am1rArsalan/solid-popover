@@ -36,7 +36,6 @@ export function Demo() {
     top: 300,
   });
 
-  // mouse event
   function handleOnMouseMove({ clientX, clientY }: any) {
     const boxInfo = boxOffsetInfo();
 
@@ -141,7 +140,6 @@ export function Demo() {
               border: "1px solid white",
               width: `${BOX_SIZE.width}px`,
               height: `${BOX_SIZE.height}px`,
-              // isSelected : boxOffsetInfo() !== undefined
               ...(boxOffsetInfo() && { background: "#fff" }),
               ...boxPosition,
             }}

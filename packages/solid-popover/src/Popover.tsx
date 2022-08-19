@@ -40,7 +40,7 @@ export function Popover(props: ParentProps<PopoverProps>) {
       props.positions.length > 0
         ? props.positions[0]
         : Constants.DEFAULT_POSITIONS[0],
-    spacing: props.spacing,
+    spacing: props.spacing || 10,
     childRect: Constants.EMPTY_CLIENT_RECT,
     popoverRect: Constants.EMPTY_CLIENT_RECT,
     parentRect: Constants.EMPTY_CLIENT_RECT,
